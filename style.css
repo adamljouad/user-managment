@@ -1,16 +1,33 @@
+body {
+  color: black
+}
+
 h1 {
   color: black;
   text-align: center;
-  position: absolute;
-  right: 100px;
-  left: 100px;
-  top: 350px;
 }
 
 .form-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+}
+
+.existing-users-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.js-user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 200px;
 }
