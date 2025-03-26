@@ -25,12 +25,13 @@ async function logUserData() {
   userData.forEach((user) => {
     userCardsHTML += `
     <div class="user-card-${user.id} js-user-card">
-    <p>Name</p>
+    <p>NAME</p>
     <p>${user.name}</p>
-    <p>Username</p>
+    <p>USERNAME</p>
     <p>${user.username}</p>
-    <p>Email</p>
+    <p>EMAIL</p>
     <p>${user.email}</p>
+    <button class="delete-user-button-${user.id}" onclick="deleteUser(${user.id})">Delete User</button>
     </div>
     `;
   });
@@ -69,17 +70,34 @@ async function addUserData() {
     userData.forEach((user) => {
       userCardsHTML += `
       <div class="user-card-${newId} js-user-card">
-      <p>Name</p>
+      <p>NAME</p>
       <p>${user.name}</p>
-      <p>Username</p>
+      <p>USERNAME</p>
       <p>${user.username}</p>
-      <p>Email</p>
+      <p>EMAIL</p>
       <p>${user.email}</p>
+      <button class="delete-user-button-${user.id}" onclick="deleteUser(${user.id})">Delete User</button>
       </div>
       `;
   })
   document.querySelector('.existing-users-box').innerHTML = userCardsHTML;
   } catch (error) {
     console.error(error)
+  }
+}
+
+async function deleteUser(userId) {
+  try {
+    let response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`, {
+      method: 'DELETE'
+    });
+    if (response.ok) {
+      console.log(`User with ID ${userId} deleted successfully`)
+      document.querySelector(`.user-card-${userId}`).remove();
+    } else {
+      console.log("failed to delete user")
+    }
+  } catch (error) {
+    console.error("Error in the request:", error)
   }
 }

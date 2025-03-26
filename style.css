@@ -1,10 +1,11 @@
 body {
-  color: black;
+  color: white;
   font-family: Montserrat, sans-serif;
+  background-color: rgb(32, 32, 32);
 }
 
 h1 {
-  color: black;
+  color: rgb(255, 255, 255);
   text-align: center;
 }
 
@@ -35,8 +36,9 @@ input {
   border-radius: 8px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #414141;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: rgb(255, 255, 255);
 }
