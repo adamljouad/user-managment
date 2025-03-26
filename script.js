@@ -1,88 +1,73 @@
 let userData = [];
 
 async function getUserData() {
-
   try {
     let response = await fetch('https://jsonplaceholder.typicode.com/users');
     let data = await response.json();
-    userData = data
+    userData = data;
     console.log("Ecco gli utenti:", data);
+    renderUsers();
   } catch (error) {
     console.error("Errore nella richiesta:", error);
-  };
-};
+  }
+}
 
-getUserData();
-
-
-async function logUserData() {
-  
-  await getUserData();
-  console.log(userData);
-
+function renderUsers() {
   let userCardsHTML = "";
 
   userData.forEach((user) => {
     userCardsHTML += `
-    <div class="user-card-${user.id} js-user-card">
-    <p>NAME</p>
-    <p>${user.name}</p>
-    <p>USERNAME</p>
-    <p>${user.username}</p>
-    <p>EMAIL</p>
-    <p>${user.email}</p>
-    <button class="delete-user-button-${user.id}" onclick="deleteUser(${user.id})">Delete User</button>
-    </div>
+      <div class="user-card-${user.id} js-user-card">
+        <p>NAME</p>
+        <p>${user.name}</p>
+        <p>USERNAME</p>
+        <p>${user.username}</p>
+        <p>EMAIL</p>
+        <p>${user.email}</p>
+        <button class="delete-user-button-${user.id}" onclick="deleteUser(${user.id})">Delete User</button>
+      </div>
     `;
   });
 
-document.querySelector('.existing-users-box').innerHTML = userCardsHTML;
-
+  document.querySelector('.existing-users-box').innerHTML = userCardsHTML;
 }
-
-logUserData();
-
-let userId = 10
 
 async function addUserData() {
   let newName = document.querySelector('.name-input-box').value;
   let newEmail = document.querySelector('.email-input-box').value;
-  let newPassword = document.querySelector('.username-input-box').value;
-  let newId = userData.length
+  let newUsername = document.querySelector('.username-input-box').value;
+
+  if (!newName || !newEmail || !newUsername) {
+    alert("Per favore, compila tutti i campi!");
+    return;
+  }
+
+  let newId = userData.length + 1;
+
   try {
     let response = await fetch('https://jsonplaceholder.typicode.com/users', {
       method: 'POST',
       headers: {
-        'Content-type':'application/json'
+        'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        id: newId + 1,
+        id: newId,
         name: newName,
         email: newEmail,
-        username: newPassword
+        username: newUsername
       })
-    })
-    let data1 = await response.json();
-    console.log(data1)
-    userData.push(data1)
-    console.log(userData)
-    let userCardsHTML = ""
-    userData.forEach((user) => {
-      userCardsHTML += `
-      <div class="user-card-${newId} js-user-card">
-      <p>NAME</p>
-      <p>${user.name}</p>
-      <p>USERNAME</p>
-      <p>${user.username}</p>
-      <p>EMAIL</p>
-      <p>${user.email}</p>
-      <button class="delete-user-button-${user.id}" onclick="deleteUser(${user.id})">Delete User</button>
-      </div>
-      `;
-  })
-  document.querySelector('.existing-users-box').innerHTML = userCardsHTML;
+    });
+
+    let newUser = await response.json();
+    userData.push(newUser);
+    renderUsers();
+
+    document.querySelector('.name-input-box').value = '';
+    document.querySelector('.email-input-box').value = '';
+    document.querySelector('.username-input-box').value = '';
+
   } catch (error) {
-    console.error(error)
+    console.error("Errore nell'aggiunta dell'utente:", error);
   }
 }
 
@@ -91,13 +76,18 @@ async function deleteUser(userId) {
     let response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`, {
       method: 'DELETE'
     });
+
     if (response.ok) {
-      console.log(`User with ID ${userId} deleted successfully`)
-      document.querySelector(`.user-card-${userId}`).remove();
+      console.log(`User with ID ${userId} deleted successfully`);
+
+      userData = userData.filter(user => user.id !== userId);
+      renderUsers(); 
     } else {
-      console.log("failed to delete user")
+      console.log("Failed to delete user");
     }
   } catch (error) {
-    console.error("Error in the request:", error)
+    console.error("Error in the request:", error);
   }
 }
+
+getUserData();
